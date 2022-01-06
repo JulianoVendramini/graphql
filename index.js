@@ -2,13 +2,21 @@ const { gql, ApolloServer } = require("apollo-server")
 
 const typeDefs = gql`
     type Query {
-        hello: String
+        id: ID
+        name: String
+        age: Int
+        active: Boolean
+        salary: Float
     }
 `
 
 const resolvers = {
     Query: {
-        hello: () => "Hello World"
+        id: () => "123",
+        name: () => "John Doe",
+        age: () => 30,
+        active: () => true,
+        salary: () => 30000.00
     }
 }
 
