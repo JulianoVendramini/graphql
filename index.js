@@ -50,13 +50,21 @@ const typeDefs = gql`
     type Query {
         users: [User]
         products: [Product]
+        user(name: String): User
+        product(id: Int): Product
     }
 `
 
 const resolvers = {
     Query: {
         users: () => usersMock,
-        products: () => productsMock
+        user: (_, { name }) => (
+            usersMock.find(user => user.name == name)
+        ),
+        products: () => productsMock,
+        product: (_, { id }) => (
+            productsMock.find(product => product.id == id)
+        )
     }
 }
 
