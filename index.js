@@ -7,6 +7,7 @@ const typeDefs = gql`
         age: Int
         active: Boolean
         salary: Float
+        tech: [String!]!
     }
 `
 
@@ -16,7 +17,8 @@ const resolvers = {
         name: () => "John Doe",
         age: () => 30,
         active: () => true,
-        salary: () => 30000.00
+        salary: () => 30000.00,
+        tech: () => ["React", "Node", "GraphQL"]
     }
 }
 
