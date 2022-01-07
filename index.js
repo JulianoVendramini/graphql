@@ -4,67 +4,54 @@ const usersMock = [
     {
         id: "1",
         name: "John",
-        age: 30,
-        active: true,
-        salary: 1000
+        perfil: 1
     },
     {
         id: "2",
         name: "Jane",
-        age: 25,
-        active: false,
-        salary: 2000
+        perfil: 2
     }
 ]
 
-const productsMock = [{
-    id: "1",
-    name: "Product 1",
-    price: 100.00,
-    description: "This is a product"
-},
-{
-    id: "2",
-    name: "Product 2",
-    price: 200.00,
-    description: "This is a product"
-}]
+const perfilMock = [
+    {
+        id: "1",
+        description: 'admin'
+    },
+    {
+        id: "2",
+        description: 'user'
+    }
+]
 
 const typeDefs = gql`
-
-    type Product {
-        id: ID
-        name: String
-        price: Float
+    type Perfil {
+        id: Int
         description: String
     }
 
     type User {
         id: ID
         name: String
-        age: Int
-        active: Boolean
-        salary: Float
+        perfil: Perfil
     }
 
     type Query {
         users: [User]
-        products: [Product]
-        user(name: String): User
-        product(id: Int): Product
+        user(id: Int): User
     }
 `
 
 const resolvers = {
+    User: {
+        perfil: (user) => {
+            return perfilMock.find(perfil => perfil.id === user.id)
+        }
+    },
+
     Query: {
         users: () => usersMock,
-        user: (_, { name }) => (
-            usersMock.find(user => user.name == name)
-        ),
-        products: () => productsMock,
-        product: (_, { id }) => (
-            productsMock.find(product => product.id == id)
-        )
+        user: (_, { id }) => (usersMock.find(user => user.id == id))
     }
 }
 
