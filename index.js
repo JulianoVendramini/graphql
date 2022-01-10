@@ -1,57 +1,64 @@
 const { gql, ApolloServer } = require("apollo-server")
 
-const usersMock = [
-    {
-        id: "1",
-        name: "John",
-        perfil: 1
-    },
-    {
-        id: "2",
-        name: "Jane",
-        perfil: 2
-    }
-]
+const db = {
+    users: [
+        {
+            id: "1",
+            name: "John",
+            profile: 1
+        },
+        {
+            id: "2",
+            name: "Jane",
+            profile: 2
+        }
+    ],
+    profile: [
+        {
+            id: "1",
+            description: 'ADMIN'
+        },
+        {
+            id: "2",
+            description: 'USER'
+        }
+    ]
+}
 
-const perfilMock = [
-    {
-        id: "1",
-        description: 'admin'
-    },
-    {
-        id: "2",
-        description: 'user'
-    }
-]
 
 const typeDefs = gql`
-    type Perfil {
-        id: Int
-        description: String
+
+    enum ProfileType {
+        ADMIN
+        USER
     }
 
     type User {
         id: ID
         name: String
-        perfil: Perfil
+        profile: Profile
+    }
+
+    type Profile {
+        id: Int
+        description: ProfileType
     }
 
     type Query {
         users: [User]
         user(id: Int): User
+        profile: [Profile]
     }
 `
 
 const resolvers = {
     User: {
-        perfil: (user) => {
-            return perfilMock.find(perfil => perfil.id === user.id)
-        }
+        profile: (user) => (db.profile.find(profile => profile.id == user.id))
     },
 
     Query: {
-        users: () => usersMock,
-        user: (_, { id }) => (usersMock.find(user => user.id == id))
+        users: () => db.users,
+        user: (_, { id }) => (db.users.find(user => user.id == id)),
     }
 }
 
