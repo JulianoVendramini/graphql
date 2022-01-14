@@ -10,6 +10,7 @@ const typeDefs = gql`
     type User {
         id: ID
         name: String
+        email: String
         profile: Profile
     }
 
@@ -23,6 +24,10 @@ const typeDefs = gql`
         user(id: Int): User
         profile: [Profile]
     }
+
+    type Mutation {
+        createUser(name: String, email: String): User!
+    }
 `
 
 const resolvers = {
@@ -33,6 +38,21 @@ const resolvers = {
     Query: {
         users: () => db.users,
         user: (_, { id }) => (db.users.find(user => user.id == id)),
+    },
+
+    Mutation: {
+        createUser: (_, { name, email }) => {
+            const userAlreadyExists = db.users.find(user => user.name == name || user.email == email)
+
+            if(userAlreadyExists) {
+                throw new Error('User already exists')
+            }
+
+            const id = db.users.length + 1
+            const user = { id, name, email }
+            db.users.push(user)
+            return user
+        }
     }
 }
 
