@@ -5,10 +5,13 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     formatError:(error) => {
-        if(error.message.startsWith("User already")) {
+        if(error.message) {
             return new Error(error.message)
         }
     }
 })
 
-server.listen(3333)
+server.listen(3333).then(({ url }) => {
+    console.log(`Server running on ${url}`)
+}
+)
